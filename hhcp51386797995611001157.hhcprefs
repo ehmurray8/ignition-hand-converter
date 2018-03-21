@@ -1,0 +1,9 @@
+origPath=C:\Users\Emmet\Downloads\IgnitionHands\old
+inputPath=C:\Ignition\Hand History\14785713
+outputPath=C:\Program Files\PokerStars\HandHistory\Hero
+movePath=C:\Ignition\Hand History\stored
+moveEnabled=True
+showKnown=True
+fastFold=True
+separateTablesByMaxSeats=True
+saveErrors=False

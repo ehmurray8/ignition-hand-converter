@@ -32,9 +32,12 @@ import logging
 log = logging.getLogger("parser")
 
 import Hand
+from abc import ABCMeta, abstractmethod
 #from Exceptions import *
 
+
 class HandHistoryConverter():
+    __metaclass__ = ABCMeta
     re_tzOffset = re.compile('^\w+[+-]\d{4}$')
     copyGameHeader = False
 
@@ -107,36 +110,68 @@ class HandHistoryConverter():
             return True
         return False
 
-    def readSupportedGames(self): abstract
-    def determineGameType(self, handText): abstract
-    def readHandInfo(self, hand): abstract
-    def readPlayerStacks(self, hand): abstract
-    def compilePlayerRegexs(self): abstract
-    def markStreets(self, hand): abstract
-    def readBlinds(self, hand): abstract
-    def readAntes(self, hand): abstract
-    def readBringIn(self, hand): abstract
-    def readButton(self, hand): abstract
-    def readHeroCards(self, hand): abstract
-    def readPlayerCards(self, hand, street): abstract
-    def readAction(self, hand, street): abstract
-    def readCollectPot(self, hand): abstract
-    def readShownCards(self, hand): abstract
-    def readTourneyResults(self, hand): abstract
+    @abstractmethod
+    def readSupportedGames(self): pass
 
+    @abstractmethod
+    def determineGameType(self, handText): pass
+
+    @abstractmethod
+    def readHandInfo(self, hand): pass
+
+    @abstractmethod
+    def readPlayerStacks(self, hand): pass
+
+    @abstractmethod
+    def compilePlayerRegexs(self): pass
+
+    @abstractmethod
+    def markStreets(self, hand): pass
+
+    @abstractmethod
+    def readBlinds(self, hand): pass
+
+    @abstractmethod
+    def readAntes(self, hand): pass
+
+    @abstractmethod
+    def readBringIn(self, hand): pass
+
+    @abstractmethod
+    def readButton(self, hand): pass
+
+    @abstractmethod
+    def readHeroCards(self, hand): pass
+
+    @abstractmethod
+    def readPlayerCards(self, hand, street): pass
+
+    @abstractmethod
+    def readAction(self, hand, street): pass
+
+    @abstractmethod
+    def readCollectPot(self, hand): pass
+
+    @abstractmethod
+    def readShownCards(self, hand): pass
+
+    @abstractmethod
+    def readTourneyResults(self, hand): pass
+
+    @abstractmethod
     def readOther(self, hand): pass
 
     def getRake(self, hand):
         hand.rake = hand.totalpot - hand.totalcollected
         round = -1 if hand.gametype['type'] == "tour" else -0.01
         if hand.rake < 0 and (not hand.roundPenny or hand.rake < round):
-            print(("hhc.getRake(): '%s': Converter may not have processed hand correctly: Amount collected (%s) is greater than the pot (%s)")
-                      % (hand.handid,str(hand.totalcollected), str(hand.totalpot)))
+            print("hhc.getRake(): '%s': Converter may not have processed hand correctly: Amount collected (%s) is greater than the pot (%s)"
+                  .format(hand.handid,str(hand.totalcollected), str(hand.totalpot)))
             #raise FpdbParseError
             return
         elif hand.totalpot > 0 and Decimal(hand.totalpot/4) < hand.rake and not hand._fastFold:
-            print(("hhc.getRake(): '%s': Converter may not have calculated rake correctly: (%s) > 25 pct of pot (%s)")
-                      % (hand.handid,str(hand.rake), str(hand.totalpot)))
+            print("hhc.getRake(): '%s': Converter may not have calculated rake correctly: (%s) > 25 pct of pot (%s)"
+                .format(hand.handid, str(hand.rake), str(hand.totalpot)))
             #raise FpdbParseError
             return
 
@@ -174,7 +209,8 @@ class HandHistoryConverter():
                 #max = player[0]
         return max
 
-    def readSummaryInfo(self, summaryInfoList): abstract
+    @abstractmethod
+    def readSummaryInfo(self, summaryInfoList): pass
 
     def getTourney(self):
         return self.tourney

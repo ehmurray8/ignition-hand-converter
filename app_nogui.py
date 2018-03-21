@@ -20,7 +20,7 @@ import os
 import codecs
 import datetime
 
-from StringIO import StringIO
+from io import StringIO
 
 from BovadaToFpdb import Bovada
 
@@ -37,13 +37,7 @@ class Worker():
         self.saveErrors = 'False'
 
     def runConverter(self,
-                     inputPath,
-                     outputPath,
-                     movePath,
-                     moveFiles,
-                     showKnown,
-                     fastFold,
-                     separateTablesByMaxSeats,
+                     inputPath, outputPath, movePath, moveFiles, showKnown, fastFold, separateTablesByMaxSeats,
                      saveErrors):
         self.inputPath = inputPath
         self.outputPath = outputPath
@@ -279,14 +273,8 @@ class AppNoGui():
                 else:
                     if self.checkValidDirs():
                         print('Running...')
-                        self.conv.runConverter(self.inputPath,
-                                                 self.outputPath,
-                                                 self.movePath,
-                                                 False,
-                                                 self.showKnown,
-                                                 self.fastFold,
-                                                 self.separateTablesByMaxSeats,
-                                                 self.saveErrors)
+                        self.conv.runConverter(self.inputPath, self.outputPath, self.movePath, False, self.showKnown,
+                                                 self.fastFold, self.separateTablesByMaxSeats, self.saveErrors)
                                                  
     def loadPreferences(self):
         if not os.path.exists('./hhcp51386797995611001157.hhcprefs'):

@@ -20,9 +20,10 @@ import os
 import codecs
 import datetime
 
-from StringIO import StringIO
+from io import StringIO
+from PyQt5 import QtCore, QtGui, QtWidgets
+from gui import Ui_Form
 
-from gui import *
 from BovadaToFpdb import Bovada
 
 class Worker(QtCore.QThread):
@@ -43,14 +44,7 @@ class Worker(QtCore.QThread):
         self.exiting = True
         self.wait()
 
-    def runConverter(self,
-                     inputDir,
-                     outputDir,
-                     moveDir,
-                     moveFiles,
-                     showKnown,
-                     fastFold,
-                     separateTablesByMaxSeats,
+    def runConverter(self, inputDir, outputDir, moveDir, moveFiles, showKnown, fastFold, separateTablesByMaxSeats,
                      saveErrors):
         self.inputDir = inputDir
         self.outputDir = outputDir
@@ -153,10 +147,10 @@ class Worker(QtCore.QThread):
 
         self.emit(QtCore.SIGNAL('runFinished'), processedHandsTotal, numFilesWithHands)
 
-class MyWidget(QtGui.QWidget):
+class MyWidget(QtWidgets.QWidget):
 
     def __init__(self, parent = None):
-        QtGui.QWidget.__init__(self, parent)
+        super().__init__(parent)
 
         self.lastSelectedIDir = ''
         self.lastSelectedODir = ''
@@ -168,8 +162,8 @@ class MyWidget(QtGui.QWidget):
         self.loadPreferences()
 
         self.thread = Worker()
-        self.connect(self.thread, QtCore.SIGNAL('updateProgressBar'), self.updateProgressBar)
-        self.connect(self.thread, QtCore.SIGNAL('runFinished'), self.runFinished)
+        #self.connect(self.thread, QtCore.SIGNAL('updateProgressBar'), self.updateProgressBar)
+        #self.connect(self.thread, QtCore.SIGNAL('runFinished'), self.runFinished)
 
         self.ui.inputDirButton.clicked.connect(self.selectInputDir)
         self.ui.outputDirButton.clicked.connect(self.selectOutputDir)
@@ -293,6 +287,13 @@ class MyWidget(QtGui.QWidget):
         inputDirValid = True
         outputDirValid = True
         moveDirValid = True
+
+        #try:
+        #    os.mkdir(inputText)
+        #    os.mkdir(outputText)
+        #    os.mkdir(moveText)
+        #except WindowsError as e:
+        #    pass
 
         if not os.path.exists(inputText):
             inputDirValid = False
@@ -428,7 +429,7 @@ class MyWidget(QtGui.QWidget):
 if __name__ == "__main__":
     import sys
 
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     Form = MyWidget()
     Form.show()
 

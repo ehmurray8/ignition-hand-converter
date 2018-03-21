@@ -170,7 +170,7 @@ class Bovada(HandHistoryConverter):
         m = self.re_GameInfo.search(handText)
         if not m:
             tmp = handText[0:200]
-            print(("BovadaToFpdb.determineGameType: '%s'") % tmp)
+            print(("BovadaToFpdb.determineGameType: '{}'") % tmp)
             #raise FpdbParseError
             return
 
@@ -220,7 +220,7 @@ class Bovada(HandHistoryConverter):
                     info['bb'] = self.Lim_Blinds[info['bb']][1]
                 except KeyError:
                     tmp = handText[0:200]
-                    print(("BovadaToFpdb.determineGameType: Lim_Blinds has no lookup for '%s' - '%s'") % (mg['BB'], tmp))
+                    print(("BovadaToFpdb.determineGameType: Lim_Blinds has no lookup for '{}' - '{}'") % (mg['BB'], tmp))
                     #raise FpdbParseError
                     return
             else:
@@ -234,7 +234,7 @@ class Bovada(HandHistoryConverter):
         m = self.re_GameInfo.search(hand.handText)
         if m is None:
             tmp = hand.handText[0:200]
-            print(("BovadaToFpdb.readHandInfo: '%s'") % tmp)
+            print("BovadaToFpdb.readHandInfo: '{}'".format(tmp))
             #raise FpdbParseError
             return
 
@@ -248,7 +248,7 @@ class Bovada(HandHistoryConverter):
                 m1 = self.re_DateTime.finditer(info[key])
                 datetimestr = "2000/01/01 00:00:00"  # default used if time not found
                 for a in m1:
-                    datetimestr = "%s/%s/%s %s:%s:%s" % (a.group('Y'), a.group('M'),a.group('D'),a.group('H'),a.group('MIN'),a.group('S'))
+                    datetimestr = "{}/{}/{} {}:{}:{}".format(a.group('Y'), a.group('M'),a.group('D'),a.group('H'),a.group('MIN'),a.group('S'))
                 hand.startTime = datetime.datetime.strptime(datetimestr, "%Y/%m/%d %H:%M:%S") # also timezone at end, e.g. " ET"
                 hand.startTime = HandHistoryConverter.changeTimezone(hand.startTime, "ET", "UTC")
             if key == 'HID':
@@ -267,7 +267,8 @@ class Bovada(HandHistoryConverter):
                         elif re.match("^[0-9+]*$", info[key]):
                             hand.buyinCurrency="play"
                         else:
-                            print(("BovadaToFpdb.readHandInfo: Failed to detect currency.") + " Hand ID: %s: '%s'" % (hand.handid, info[key]))
+                            print("BovadaToFpdb.readHandInfo: Failed to detect currency."
+                                  " Hand ID: {}: '{}'".format(hand.handid, info[key]))
                             #raise FpdbParseError
                             return
 
@@ -308,7 +309,7 @@ class Bovada(HandHistoryConverter):
         else:
             m = self.re_PlayerInfo.finditer(hand.handText)
         for a in m:
-            if re.search(r"%s (\s?\[ME\]\s)?: Card dealt to a spot" % re.escape(a.group('PNAME')), hand.handText):
+            if re.search(r"{} (\s?\[ME\]\s)?: Card dealt to a spot".format(re.escape(a.group('PNAME'))), hand.handText):
                 if not hand.buttonpos and a.group('PNAME')=='Dealer':
                     hand.buttonpos = int(a.group('SEAT'))
                 if a.group('HERO'):
@@ -319,7 +320,7 @@ class Bovada(HandHistoryConverter):
             #seatNo += 1
         if len(hand.players)==0:
             tmp = hand.handText[0:200]
-            print(("BovadaToFpdb.readPlayerStacks: '%s'") % tmp)
+            print(("BovadaToFpdb.readPlayerStacks: '{}'").format(tmp))
             #raise FpdbParseError
             return
         elif len(hand.players)==10:
@@ -328,7 +329,7 @@ class Bovada(HandHistoryConverter):
     def playerSeatFromPosition(self, source, handid, position):
         player = self.playersMap.get(position)
         if player is None:
-            print(("Hand.%s: '%s' unknown player seat from position: '%s'") % (source, handid, position))
+            print("Hand.{}: '{}' unknown player seat from position: '{}'".format(source, handid, position))
             #raise FpdbParseError
             return
         return player
@@ -529,7 +530,7 @@ class Bovada(HandHistoryConverter):
                 if hand.gametype['sb'] == v[0]:
                     hand.gametype['bb'] = v[1]
         if hand.gametype['sb'] == None or hand.gametype['bb'] == None:
-            print(("BovadaToFpdb.fixBlinds: Failed to fix blinds") + " Hand ID: %s" % (hand.handid, ))
+            print("BovadaToFpdb.fixBlinds: Failed to fix blinds"" Hand ID: {}".format(hand.handid))
             #raise FpdbParseError
             return
         hand.sb = hand.gametype['sb']
@@ -547,7 +548,7 @@ class Bovada(HandHistoryConverter):
                         newcards = found.group('NEWCARDS').split(' ')
                         hand.addHoleCards(street, hand.hero, closed=newcards, shown=False, mucked=False, dealt=True)
 
-        for street, text in hand.streets.iteritems():
+        for street, text in hand.streets.items():
             if not text or street in ('PREFLOP', 'DEAL'): continue
             m = self.re_ShowdownAction.finditer(hand.streets[street])
             foundDict = None
@@ -603,7 +604,7 @@ class Bovada(HandHistoryConverter):
                 elif action.group('ATYPE') in (' Card dealt to a spot', ' Big blind/Bring in'):
                     pass
                 else:
-                    print (("DEBUG:") + " " + ("Unimplemented %s: '%s' '%s'") % ("readAction", action.group('PNAME'), action.group('ATYPE')))
+                    print (("DEBUG:") + " " + ("Unimplemented {}: '{}' '{}'") % ("readAction", action.group('PNAME'), action.group('ATYPE')))
 
     def allInBlind(self, hand, street, action, actiontype):
         if street in ('PREFLOP', 'DEAL'):

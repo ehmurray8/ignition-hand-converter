@@ -118,7 +118,7 @@ def calcStartCards(hand, player):
 
 
 _firstcard = '((hp.startcards - 1) /  13)'
-_secondcard = '((hp.startcards - 1) - 13 * %s)' % _firstcard
+_secondcard = '((hp.startcards - 1) - 13 * %s)'.format( _firstcard)
 _gap = '(%s - %s = %d)'
 
 DATABASE_FILTERS = {
@@ -472,14 +472,14 @@ def encodeRazzStartHand(cards):
 if __name__ == '__main__':
     print("1) " + ("Convert list ID to card (e.g. 1 to 2h)"))
     print("2) " + ("Convert card to list ID (e.g. 2h to 1)"))
-    s = raw_input('--> ')
+    s = input('--> ')
     if s == '1':
         while True:
-            cardid = raw_input(('Enter list ID:')+" ")
-            print(("Card:")+" '%s'" % suitFromCardList[int(cardid)])
+            cardid = input(('Enter list ID:')+" ")
+            print(("Card:")+" '%s'".format(suitFromCardList[int(cardid)]))
     elif s == '2':
         while True:
-            cardid = raw_input(('Enter card:')+" ")
-            print(("Encoded card:")+" '%s'" % encodeCard(cardid))
+            cardid = input(('Enter card:')+" ")
+            print(("Encoded card:")+" '%s'".format(encodeCard(cardid)))
     else:
         print(("Please enter 1 or 2"))
