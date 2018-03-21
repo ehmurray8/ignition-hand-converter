@@ -560,7 +560,7 @@ class Hand(object):
              }
 
         log.debug("gametype: {}".format(self.gametype))
-        retstring = "{}{}".format(gs[self.gametype['category']], ls[self.gametype['limitType']])
+        retstring = "{} {}".format(gs[self.gametype['category']], ls[self.gametype['limitType']])
         return retstring
 
     def printHand(self):
@@ -644,9 +644,9 @@ class Hand(object):
 
     def writeGameLine(self):
         if self._fastFold:
-            gs = "PokerStars Zoom Hand #%s: " % self.handid
+            gs = "PokerStars Zoom Hand #{}: ".format(self.handid)
         else:
-            gs = "PokerStars Hand #%s: " % self.handid
+            gs = "PokerStars Hand #{}: ".format(self.handid)
 
         if self.tourNo is not None and self.mixed is not None: # mixed tournament
             gs += "Tournament #{}, {} {} ({}) - Level {} ({}) - ".format(self.tourNo,
@@ -721,7 +721,7 @@ class HoldemOmahaHand(Hand):
         if builtFrom == "HHC":
             hhc.readHandInfo(self)
             if self.gametype['type'] == 'tour':
-                self.tablename = "{} {}" % (self.tourNo, self.tablename)
+                self.tablename = "{} {}".format(self.tourNo, self.tablename)
             hhc.readPlayerStacks(self)
             hhc.compilePlayerRegexs(self)
             hhc.markStreets(self)
@@ -814,7 +814,7 @@ class HoldemOmahaHand(Hand):
         log.debug(self.actions['PREFLOP'])
         for player in [x for x in self.players if x[1] in players_who_act_preflop]:
             # Only print stacks of players who do something preflop
-            print("Seat {}: {} (${} in chips) ".format(player[0], player[1], round(float(player[2]))), file=fh)
+            print("Seat {}: {} (${} in chips) ".format(player[0], player[1], round(float(player[2]), 2)), file=fh)
 
         if self.actions['BLINDSANTES']:
             log.debug(self.actions['BLINDSANTES'])
@@ -845,7 +845,8 @@ class HoldemOmahaHand(Hand):
                 print(self.actionString(act), file=fh)
 
         if self.board['RIVER']:
-            print("*** RIVER *** [{}] [{}]".format(" ".join(self.board['FLOP']+self.board['TURN']), " ".join(self.board['RIVER'])), file=fh)
+            print("*** RIVER *** [{}] [{}]".format(" ".join(self.board['FLOP']+self.board['TURN']),
+                                                   " ".join(self.board['RIVER'])), file=fh)
         if self.actions['RIVER']:
             for act in self.actions['RIVER']:
                 print(self.actionString(act), file=fh)
@@ -1120,7 +1121,7 @@ class StudHand(Hand):
         if builtFrom == "HHC":
             hhc.readHandInfo(self)
             if self.gametype['type'] == 'tour':
-                self.tablename = "{} {}" % (self.tourNo, self.tablename)
+                self.tablename = "{} {}".format(self.tourNo, self.tablename)
             hhc.readPlayerStacks(self)
             hhc.compilePlayerRegexs(self)
             hhc.markStreets(self)

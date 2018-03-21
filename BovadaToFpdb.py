@@ -170,7 +170,7 @@ class Bovada(HandHistoryConverter):
         m = self.re_GameInfo.search(handText)
         if not m:
             tmp = handText[0:200]
-            print(("BovadaToFpdb.determineGameType: '{}'") % tmp)
+            print(("BovadaToFpdb.determineGameType: '{}'").format(tmp))
             #raise FpdbParseError
             return
 
@@ -220,7 +220,7 @@ class Bovada(HandHistoryConverter):
                     info['bb'] = self.Lim_Blinds[info['bb']][1]
                 except KeyError:
                     tmp = handText[0:200]
-                    print(("BovadaToFpdb.determineGameType: Lim_Blinds has no lookup for '{}' - '{}'") % (mg['BB'], tmp))
+                    print("BovadaToFpdb.determineGameType: Lim_Blinds has no lookup for '{}' - '{}'".format(mg['BB'], tmp))
                     #raise FpdbParseError
                     return
             else:
@@ -497,7 +497,10 @@ class Bovada(HandHistoryConverter):
             if acts!=a.groupdict():
                 acts = a.groupdict()
                 if acts['ATYPE'] == ' All-in':
-                    re_Ante_Plyr  = re.compile(r"^" + re.escape(acts['PNAME']) + " (\s?\[ME\]\s)?: Ante chip %(CUR)s(?P<ANTE>[%(NUM)s]+)" % self.substitutions, re.MULTILINE)
+                    # Not sure on formatting here
+                    # re_Ante_Plyr  = re.compile(r"^" + re.escape(acts['PNAME']) + " (\s?\[ME\]\s)?: Ante chip %(CUR)s(?P<ANTE>[%(NUM)s]+)" % self.substitutions, re.MULTILINE)
+                    re_Ante_Plyr  = re.compile(r"^" + re.escape(acts['PNAME']) + " (\s?\[ME\]\s)?: Ante chip {}(?P<ANTE>[{}]+)"
+                                               .format(self.substitutions, re.MULTILINE))
                     m = self.re_Antes.search(hand.handText)
                     m1 = re_Ante_Plyr.search(hand.handText)
                     if (not m or m1):
@@ -604,7 +607,8 @@ class Bovada(HandHistoryConverter):
                 elif action.group('ATYPE') in (' Card dealt to a spot', ' Big blind/Bring in'):
                     pass
                 else:
-                    print (("DEBUG:") + " " + ("Unimplemented {}: '{}' '{}'") % ("readAction", action.group('PNAME'), action.group('ATYPE')))
+                    print("DEBUG: ""Unimplemented {}: '{}' '{}'"
+                          .format("readAction", action.group('PNAME'), action.group('ATYPE')))
 
     def allInBlind(self, hand, street, action, actiontype):
         if street in ('PREFLOP', 'DEAL'):

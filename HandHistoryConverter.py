@@ -93,14 +93,14 @@ class HandHistoryConverter():
                 elif gametype['base'] == 'draw':
                     hand = Hand.DrawHand(None, self, self.sitename, gametype, handText)
             else:
-                print(("%s Unsupported game type: %s") % (self.sitename, gametype))
+                print("{} Unsupported game type: {}".format(self.sitename, gametype))
                 #raise FpdbParseError
                 return
 
             if hand:
                 return hand
             else:
-                print(("%s Unsupported game type: %s") % (self.sitename, gametype))
+                print("{} Unsupported game type: {}".format(self.sitename, gametype))
 
     def isPartial(self, handText):
         count = 0
@@ -163,14 +163,14 @@ class HandHistoryConverter():
 
     def getRake(self, hand):
         hand.rake = hand.totalpot - hand.totalcollected
-        round = -1 if hand.gametype['type'] == "tour" else -0.01
-        if hand.rake < 0 and (not hand.roundPenny or hand.rake < round):
-            print("hhc.getRake(): '%s': Converter may not have processed hand correctly: Amount collected (%s) is greater than the pot (%s)"
+        round_ = -1 if hand.gametype['type'] == "tour" else -0.01
+        if hand.rake < 0 and (not hand.roundPenny or hand.rake < round_):
+            print("hhc.getRake(): '{}': Converter may not have processed hand correctly: Amount collected ({}) is greater than the pot ({})"
                   .format(hand.handid,str(hand.totalcollected), str(hand.totalpot)))
             #raise FpdbParseError
             return
         elif hand.totalpot > 0 and Decimal(hand.totalpot/4) < hand.rake and not hand._fastFold:
-            print("hhc.getRake(): '%s': Converter may not have calculated rake correctly: (%s) > 25 pct of pot (%s)"
+            print("hhc.getRake(): '{}': Converter may not have calculated rake correctly: ({}) > 25 pct of pot ({})"
                 .format(hand.handid, str(hand.rake), str(hand.totalpot)))
             #raise FpdbParseError
             return
@@ -309,7 +309,7 @@ class HandHistoryConverter():
 
     @staticmethod
     def getTableNoRe(tournament):
-        return "%s.+(?:Table|Torneo) (\d+)" % (tournament, )
+        return "{}.+(?:Table|Torneo) (\d+)".format(tournament )
 
     @staticmethod
     def clearMoneyString(money):
