@@ -117,9 +117,9 @@ class Worker():
                             #fileOut.close()
                         else:
                             if self.saveErrors:
-                                #errorsOut = open(errorsOutPath, 'a')
+                                errorsOut = open(errorsOutPath, 'a')
                                 errorsOut.write(handInput + '\n\n')
-                                #errorsOut.close()
+                                errorsOut.close()
                     handInput = ''
                     handOutput = ''
 
